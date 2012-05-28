@@ -14,9 +14,9 @@
           (let [cdst (curr dsts)
                 roads (select-keys (curr g) unvi)
                 reslt (zipmap (keys dsts)
-              (map #(if-let [rd (% roads)]
+              (map #(if-let [road (% roads)]
                       (let [idst (% dsts)
-                            sum (+ cdst (% roads))]
+                            sum (+ cdst road)]
                         (if (or (nil? idst)
                               (< sum idst))
                           sum idst))
