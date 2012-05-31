@@ -1,25 +1,30 @@
-(ns routefinder.core)
+(ns routefinder.core
+  (:use [clojure.data.priority-map :only [priority-map]]))
 
-(defn dijkstra [g src]
-  (loop [dsts (assoc (zipmap (keys g) (repeat nil)) src 0)
-         curr src
-         unvi (apply hash-set (keys g))]
-    (if (empty? unvi)
-      dsts
-      (let [unvi (disj unvi curr)
-            nextn (first (sort-by #(% dsts) unvi))
-            nrds (zipmap (keys g) (map #(select-keys % unvi) (vals g)))]
-        (if (empty? (curr nrds))
-          (recur dsts nextn unvi)
-          (let [cdst (curr dsts)
-                roads (select-keys (curr g) unvi)
-                reslt (zipmap (keys dsts)
-              (map #(if-let [road (% roads)]
-                      (let [idst (% dsts)
-                            sum (+ cdst road)]
-                        (if (or (nil? idst)
-                              (< sum idst))
-                          sum idst))
-                      (% dsts)) (keys dsts)))]
-            (recur reslt nextn unvi)))))))
+(defn a*-search
+  "Performs an a* search over the data using heuristic est-cost.
 
+  ARGUMENTS:
+    est-cost(e)  The estimate of the cost to the goal.
+    neighbors(e) Returns map of neighbors at e and their costs
+    start        The element at which to start
+    goal?(e)     Function that checks if the goal has been reached.
+
+  RETURNS:
+    The list of elements in the optimal path. "
+  [est-cost neighbors start goal?]
+  (loop [open (priority-map start [0 nil])
+         closed {}]
+    (let [[e [s p]] (first open)]
+      (cond
+        (nil? e) "Path not found! No more elements to try!"
+        (goal? e) (->> (conj (iterate #(second (closed %)) p) e)
+                    (take-while #(not (nil? %)))
+                    reverse)
+        :else (recur
+                (merge-with #(if (< (first %1) (first %2)) %1 %2)
+                  (dissoc open e)
+                  (into {} (for [[n ns] (neighbors e)
+                                 :when (not (get closed n))]
+                             [n [(+ ns s (est-cost n)) e]])))
+                (assoc closed e [s p]))))))
