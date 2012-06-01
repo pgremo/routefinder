@@ -1,4 +1,6 @@
 (ns routefinder.core
+  (:use [korma.db])
+  (:use [korma.core])
   (:use [clojure.data.priority-map :only [priority-map]]))
 
 (defn a*-search
@@ -28,3 +30,19 @@
                                  :when (not (get closed n))]
                              [n [(+ ns s (est-cost n)) e]])))
                 (assoc closed e [s p]))))))
+
+(defn map-vals [m f]
+  (reduce (fn [altered-map [k v]] (assoc altered-map k (f v))) {} m))
+
+(defdb eve {:classname "org.h2.Driver"
+            :subprotocol "h2"
+            :subname "tcp://localhost/~/Development/routefinder/eve"
+            :user "sa"
+            :password ""})
+
+(defentity JUMPS)
+
+(def jumps (map-vals (group-by #(get % :TOSYSTEM) (select JUMPS)) #(reduce (fn [a b](assoc a (get b :FROMSYSTEM) (get b :COST))) {} %)))
+
+
+

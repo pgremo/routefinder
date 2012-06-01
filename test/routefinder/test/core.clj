@@ -1,6 +1,5 @@
 (ns routefinder.test.core
   (:use [routefinder.core])
-  (:use [clojure.tools.trace])
   (:use [clojure.test])
   (:use [clojure.data.priority-map :only [priority-map]]))
 
@@ -12,3 +11,6 @@
 
 (deftest find-distances-from-red-a*-search
   (is (= '(:red :blue :green) (a*-search (fn [a] 0) #(get demo-graph %) :red #(= :green %)))))
+
+(prn (a*-search (fn [a] 0) #(get jumps %) "Amarr" #(= "Jita" %)))
+(prn (a*-search (fn [a] 0) #(get jumps %) "Jita" #(= "Amarr" %)))
