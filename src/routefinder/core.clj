@@ -1,6 +1,7 @@
 (ns routefinder.core
   (:use [korma.db])
   (:use [korma.core])
+  (:use [clojure.algo.generic.functor])
   (:use [clojure.data.priority-map :only [priority-map]]))
 
 (defn a*-search
@@ -27,12 +28,12 @@
                 (merge-with #(if (< (first %1) (first %2)) %1 %2)
                   (dissoc open e)
                   (into {} (for [[n ns] (neighbors e)
-                                 :when (not (get closed n))]
+                                 :when (not (closed n))]
                              [n [(+ ns s (est-cost n)) e]])))
                 (assoc closed e [s p]))))))
 
-(defn map-vals [m f]
-  (reduce (fn [altered-map [k v]] (assoc altered-map k (f v))) {} m))
+(defn round [s n]
+  (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))
 
 (defdb eve {:classname "org.h2.Driver"
             :subprotocol "h2"
@@ -42,7 +43,7 @@
 
 (defentity JUMPS)
 
-(def jumps (map-vals (group-by #(get % :TOSYSTEM) (select JUMPS)) #(reduce (fn [a b](assoc a (get b :FROMSYSTEM) (get b :COST))) {} %)))
+(def jumps (fmap #(reduce (fn [a b] (assoc a (b :TOSYSTEM ) (round 1 (b :TOSECURITY )))) {} %) (group-by #(% :FROMSYSTEM ) (select JUMPS))))
 
 
 
