@@ -45,5 +45,16 @@
 
 (def jumps (fmap #(reduce (fn [a b] (assoc a (b :TOSYSTEM ) (round 1 (b :TOSECURITY )))) {} %) (group-by #(% :FROMSYSTEM ) (select JUMPS))))
 
+(defn any-neighbor
+  [k]
+  (zipmap (keys (jumps k)) (repeat 1)))
+
+(defn highsec-neighbor
+  [k]
+  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (jumps k)))
+
+(defn only-highsec-neighbor
+  [k]
+  (filter #(= (val %) 1) (highsec-neighbor k)))
 
 
