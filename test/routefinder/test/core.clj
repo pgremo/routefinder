@@ -1,8 +1,6 @@
 (ns routefinder.test.core
   (:use [routefinder.core])
-  (:use [clojure.test])
-  (:use [clojure.algo.generic.functor])
-  (:use [clojure.data.priority-map :only [priority-map]]))
+  (:use [clojure.test]))
 
 (def demo-graph {:red {:green 10, :blue 5, :orange 8},
                  :green {:red 10,   :blue 3},

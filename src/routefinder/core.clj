@@ -1,53 +1,33 @@
 (ns routefinder.core
   (:use [korma.db])
+  (:use [clojure.tools.trace])
   (:use [korma.core])
-  (:use [clojure.algo.generic.functor])
+  (:use [clojure.algo.generic.functor :only [fmap]])
   (:use [clojure.data.priority-map :only [priority-map]]))
 
-(defn a*-search
-  "Performs an a* search over the data using heuristic est-cost.
-
-  ARGUMENTS:
-    est-cost(e)  The estimate of the cost to the goal.
-    neighbors(e) Returns map of neighbors at e and their costs
-    start        The element at which to start
-    goal?(e)     Function that checks if the goal has been reached.
-
-  RETURNS:
-    The list of elements in the optimal path. "
-  [est-cost neighbors start goal?]
-  (loop [open (priority-map start [0 nil])
-         closed {}]
-    (let [[e [s p]] (first open)]
-      (cond
-        (nil? e) "Path not found! No more elements to try!"
-        (goal? e) (->> (conj (iterate #(second (closed %)) p) e)
-                    (take-while #(not (nil? %)))
-                    reverse)
-        :else (recur
-                (merge-with #(if (< (first %1) (first %2)) %1 %2)
-                  (dissoc open e)
-                  (into {} (for [[n ns] (neighbors e)
-                                 :when (not (closed n))]
-                             [n [(+ ns s (est-cost n)) e]])))
-                (assoc closed e [s p]))))))
-
-(defn round [s n]
+(defn round
+  [s n]
   (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))
+
+(defn swap [v i1 i2]
+  (assoc v i2 (v i1) i1 (v i2)))
 
 (defdb eve {:classname "org.h2.Driver"
             :subprotocol "h2"
-            :subname "tcp://localhost/~/Development/routefinder/eve"
+            :subname "tcp://localhost/eve"
             :user "sa"
             :password ""})
 
 (defentity JUMPS)
 
-(def jumps (fmap #(reduce (fn [a b] (assoc a (b :TOSYSTEM ) (round 1 (b :TOSECURITY )))) {} %) (group-by #(% :FROMSYSTEM ) (select JUMPS))))
+(def jumps (->>
+             (select JUMPS)
+             (group-by :FROMSYSTEM )
+             (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (round 1 (:TOSECURITY b)))) {} %))))
 
 (defn any-neighbor
   [k]
-  (zipmap (keys (jumps k)) (repeat 1)))
+  (fmap (constantly 1) (jumps k)))
 
 (defn highsec-neighbor
   [k]
@@ -55,6 +35,6 @@
 
 (defn only-highsec-neighbor
   [k]
-  (filter #(= (val %) 1) (highsec-neighbor k)))
+  (filter (comp (partial = 1) val) (highsec-neighbor k)))
 
 
