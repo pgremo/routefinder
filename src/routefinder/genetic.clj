@@ -1,16 +1,15 @@
 (ns routefinder.genetic
+  (:use [clojure.tools.trace])
   (:use [routefinder.core])
+  (:use [routefinder.a_star])
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.string :only [join]]))
-
-(def target
-  "Hello Clojure World!")
 
 (defn distance
   "Determines the fitness of a given subject based on the
   distance between it and the target"
   [subject]
-  (reduce + (map (comp abs compare) subject target)))
+  (reduce + (map #(count (a-star (fn [a] 0) only-highsec-neighbor %1 (fn [a] (= %2 a)))) subject (drop 1 subject))))
 
 (def fitness
   (memoize distance))
@@ -26,7 +25,7 @@
 
 (defn create-initial-sample
   "Creates a subjects of the given length composed of random elements"
-  []
+  [target]
   (let [target-seq (seq target)]
     (repeatedly 1000 #(shuffle target-seq))))
 
@@ -49,12 +48,17 @@
   (map breed (repeatedly 1000 #(rand-nth subjects))))
 
 (defn solve
-  []
+  "Iterate over generations producing the most fit specimens"
+  [target]
   (->>
-    (create-initial-sample)
+    (create-initial-sample target)
     (iterate (comp (partial sort-by fitness) breed-subjects select-subjects))
     (map first)))
 
 (defn -main
   []
-  (println (->> (solve) (take 100) (last))))
+  (println (->>
+             (solve ["Amarr", "Jita", "Rens", "Dodixie", "Mani", "Oimmo"])
+             (drop 25)
+             (map (juxt fitness identity))
+             (first))))

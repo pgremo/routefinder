@@ -1,7 +1,7 @@
-(ns routefinder.a-star
+(ns routefinder.a_star
   (:use [clojure.data.priority-map :only [priority-map]]))
 
-(defn a*-search
+(defn a-star
   "Performs an a* search over the data using heuristic est-cost.
 
   ARGUMENTS:

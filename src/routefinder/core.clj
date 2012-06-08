@@ -1,9 +1,9 @@
 (ns routefinder.core
-  (:use [korma.db])
-  (:use [clojure.tools.trace])
   (:use [korma.core])
+  (:use [korma.db])
   (:use [clojure.algo.generic.functor :only [fmap]])
-  (:use [clojure.data.priority-map :only [priority-map]]))
+  (:use [clojure.data.priority-map :only [priority-map]])
+  (:use [clojure.tools.trace]))
 
 (defn round
   [s n]
