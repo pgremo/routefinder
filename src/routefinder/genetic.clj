@@ -19,20 +19,11 @@
 (def fitness
   (memoize distance))
 
-(defn breed
-  "Decides whether to breed cleanly or with a mutation. Also provides a random
-  position for breeding if not provided"
-  [s1]
-  (if (< 0 (rand-int 2))
-    s1
-    (let [size (count s1)]
-      (swap s1 (rand-int size) (rand-int size)))))
-
 (defn create-initial-sample
   "Creates a subjects of the given length composed of random elements"
   [target]
-  (let [target-seq (seq target)]
-    (repeatedly 1000 #(shuffle target-seq))))
+  (let [target-seq (vec target)]
+    (repeatedly 1000 #(shuffle-sub target-seq 1))))
 
 (defn tourny-select-subject
   "Takes a list of subjects, selects two at random, and returns the one with
@@ -45,6 +36,15 @@
   then repeated calling tourny-select on the sample to generate 90 more."
   [sample]
   (concat (take 10 sample) (repeatedly 90 #(tourny-select-subject sample))))
+
+(defn breed
+  "Decides whether to breed cleanly or with a mutation. Also provides a random
+  position for breeding if not provided"
+  [s1]
+  (if (< 0 (rand-int 2))
+    s1
+    (let [size (dec (count s1))]
+      (swap s1 (inc (rand-int size)) (inc (rand-int size))))))
 
 (defn breed-subjects
   "Generates the solution set by repeatedly selecting two subjects
