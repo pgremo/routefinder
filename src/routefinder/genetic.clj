@@ -5,11 +5,16 @@
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.string :only [join]]))
 
+(set! *warn-on-reflection* true)
+
+(def path-count
+  (memoize #(count (a-star (constantly 0) only-highsec-neighbor %1 (partial = %2)))))
+
 (defn distance
   "Determines the fitness of a given subject based on the
   distance between it and the target"
   [subject]
-  (reduce + (map #(count (a-star (fn [a] 0) only-highsec-neighbor %1 (fn [a] (= %2 a)))) subject (drop 1 subject))))
+  (reduce + (map path-count subject (drop 1 subject))))
 
 (def fitness
   (memoize distance))
@@ -57,8 +62,9 @@
 
 (defn -main
   []
-  (println (->>
-             (solve ["Amarr", "Jita", "Rens", "Dodixie", "Mani", "Oimmo"])
-             (drop 25)
-             (map (juxt fitness identity))
-             (first))))
+  (time
+    (println (->>
+               (solve ["Amarr", "Jita", "Rens", "Dodixie", "Mani", "Oimmo"])
+               (drop 25)
+               (map (juxt fitness identity))
+               (first)))))

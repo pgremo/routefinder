@@ -5,6 +5,8 @@
   (:use [clojure.data.priority-map :only [priority-map]])
   (:use [clojure.tools.trace]))
 
+(set! *warn-on-reflection* true)
+
 (defn round
   [s n]
   (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))
