@@ -1,1 +1,1 @@
-java -cp lib/h2*.jar org.h2.tools.Server
+java -cp lib/dev/h2*.jar org.h2.tools.Server
