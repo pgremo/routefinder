@@ -12,6 +12,8 @@
   (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))
 
 (defn shuffle-sub
+  ([l]
+    (shuffle-sub l 0))
   ([l s]
     (shuffle-sub l s (count l)))
   ([l s e]

@@ -64,7 +64,7 @@
   []
   (time
     (println (->>
-               (solve ["Amarr", "Jita", "Rens", "Dodixie", "Mani", "Oimmo"])
+               (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
                (drop 25)
                (map (juxt fitness identity))
                (first)))))
