@@ -13,5 +13,6 @@
                  [clj-yaml "0.3.1"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.trace "0.7.3"]
                                   [com.h2database/h2 "1.3.166"]]}}
-  :plugins [[lein-outdated "0.1.0"]]
+  :plugins [[lein-outdated "0.1.0"]
+            [lein-marginalia "0.7.1"]]
   :main routefinder.genetic)
