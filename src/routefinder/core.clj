@@ -1,8 +1,6 @@
 (ns routefinder.core
   (:use [korma.db]))
 
-(set! *warn-on-reflection* true)
-
 (defn round
   [s n]
   (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))

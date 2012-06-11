@@ -6,8 +6,6 @@
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.algo.generic.functor :only [fmap]]))
 
-(set! *warn-on-reflection* true)
-
 (defn any-neighbor
   [k]
   (fmap (constantly 1) (jumps k)))
@@ -56,8 +54,8 @@
   [s1]
   (if (< 0 (rand-int 2))
     s1
-    (let [size (dec (count s1))]
-      (swap s1 (inc (rand-int size)) (inc (rand-int size))))))
+    (let [size ((comp dec count) s1)]
+      (swap s1 ((comp inc rand-int) size) ((comp inc rand-int) size)))))
 
 (defn breed-subjects
   "Generates the solution set by repeatedly selecting two subjects
