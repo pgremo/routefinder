@@ -10,7 +10,7 @@
                  [net.cgrand/moustache "1.1.0"]
                  [clj-yaml "0.3.1"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.trace "0.7.3"]
-                                  [com.h2database/h2 "1.3.166"]]}}
+                                  [com.h2database/h2 "1.3.167"]]}}
   :main routefinder.genetic
   :min-lein-version "2.0.0"
   :warn-on-reflection true
