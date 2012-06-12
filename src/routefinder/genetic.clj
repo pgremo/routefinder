@@ -2,21 +2,9 @@
   (:use clojure.tools.trace
         routefinder.core
         routefinder.models
-        routefinder.a_star)
+        routefinder.a-star)
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.algo.generic.functor :only [fmap]]))
-
-(defn any-neighbor
-  [k]
-  (fmap (constantly 1) (jumps k)))
-
-(defn highsec-neighbor
-  [k]
-  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (jumps k)))
-
-(defn only-highsec-neighbor
-  [k]
-  (filter (comp (partial = 1) val) (highsec-neighbor k)))
 
 (def path-count
   (memoize #(count (a-star (constantly 0) only-highsec-neighbor %1 (partial = %2)))))
