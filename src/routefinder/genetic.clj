@@ -6,8 +6,12 @@
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.algo.generic.functor :only [fmap]]))
 
+(defn path
+  [j k]
+  (a-star (constantly 0) only-highsec-neighbor j (partial = k)))
+
 (def path-count
-  (memoize #(count (a-star (constantly 0) only-highsec-neighbor %1 (partial = %2)))))
+  (memoize #(dec (count (path %1 %2)))))
 
 (defn distance
   "Determines the fitness of a given subject based on the
@@ -59,11 +63,16 @@
     (iterate (comp (partial sort-by fitness) breed-subjects select-subjects))
     (map first)))
 
+(defn debug-path
+  [coll]
+  (map path coll (drop 1 coll)))
+
 (defn -main
   []
   (time
-    (println (->>
-               (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
-               (drop 25)
-               (map (juxt fitness identity))
-               (first)))))
+    (->>
+      (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
+      (drop 25)
+      (take 1)
+      (map (juxt fitness debug-path))
+      )))
