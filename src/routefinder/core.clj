@@ -16,6 +16,10 @@
 (defn swap [v i1 i2]
   (assoc v i2 (v i1) i1 (v i2)))
 
+(defn rand-in
+  ([k] (rand-int k))
+  ([k j] (+ k (rand-int (- j k)))))
+
 (defdb eve {:classname "org.h2.Driver"
             :subprotocol "h2"
             :subname "tcp://localhost/eve"
