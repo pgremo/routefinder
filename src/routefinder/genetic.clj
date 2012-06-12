@@ -3,6 +3,7 @@
         routefinder.core
         routefinder.models
         routefinder.a-star)
+  (:use [clojure.string :only [join]])
   (:use [clojure.math.numeric-tower :only [abs]])
   (:use [clojure.algo.generic.functor :only [fmap]]))
 
@@ -10,14 +11,14 @@
   [j k]
   (a-star (constantly 0) only-highsec-neighbor j (partial = k)))
 
-(def path-count
+(def jump-count
   (memoize #(dec (count (path %1 %2)))))
 
 (defn distance
   "Determines the fitness of a given subject based on the
   distance between it and the target"
   [subject]
-  (reduce + (map path-count subject (drop 1 subject))))
+  (reduce + (map jump-count subject (drop 1 subject))))
 
 (def fitness
   (memoize distance))
@@ -70,9 +71,10 @@
 (defn -main
   []
   (time
-    (->>
-      (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
-      (drop 25)
-      (take 1)
-      (map (juxt fitness debug-path))
-      )))
+    (println (->>
+               (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
+               (drop 25)
+               (first)
+               (debug-path)
+               (map (juxt fitness identity))
+               (join "\n")))))
