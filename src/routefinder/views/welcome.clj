@@ -5,21 +5,32 @@
   (:use [clojure.string :only [join]])
   (:use [noir.core :only [defpage defpartial]]))
 
-(defpartial route-item
-  [[length segment]]
-  [:li.route length segment])
+(defn in?
+  "true if seq contains elm"
+  [seq elm]
+  (some #(= elm %) seq))
 
-(def route-result (->>
-             (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
-             (drop 25)
-             (first)
-             (route)
-             (map (juxt fitness identity))))
+(defpartial route-item
+  [index [waypoint segment]]
+  [:tr.route [:td (inc index)] [:td waypoint] [:td segment]])
+
+(def nodes
+  ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
+
+(def route-result
+  (->>
+    (solve nodes)
+    (drop 25)
+    (first)
+    (route)
+    (map rest)
+    (flatten)
+    (map (juxt (partial in? nodes) identity))))
 
 (defpartial route-list
   [items]
-  [:ul.route (map route-item items)])
+  [:tbody.route (map-indexed route-item items)])
 
 (defpage "/welcome" []
   (common/layout
-    [:p (route-list route-result)]))
+    [:table (route-list route-result)]))
