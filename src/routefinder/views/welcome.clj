@@ -1,14 +1,10 @@
 (ns routefinder.views.welcome
   (:require [routefinder.views.common :as common]
             [noir.content.getting-started])
+  (:use [routefinder.core])
   (:use [routefinder.genetic])
   (:use [clojure.string :only [join]])
   (:use [noir.core :only [defpage defpartial]]))
-
-(defn in?
-  "true if seq contains elm"
-  [seq elm]
-  (some #(= elm %) seq))
 
 (defpartial route-item
   [index [waypoint segment]]
