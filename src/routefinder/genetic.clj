@@ -1,7 +1,7 @@
 (ns routefinder.genetic
   (:use clojure.tools.trace
         routefinder.core
-        routefinder.model
+        routefinder.models.jumps
         routefinder.a-star)
   (:use [clojure.string :only [join]])
   (:use [clojure.math.numeric-tower :only [abs]])

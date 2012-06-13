@@ -1,4 +1,4 @@
-(ns routefinder.model
+(ns routefinder.models.jumps
   (:use korma.core
         routefinder.core)
   (:use [clojure.algo.generic.functor :only [fmap]]))
