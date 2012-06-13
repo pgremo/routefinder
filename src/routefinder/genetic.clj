@@ -62,14 +62,3 @@
     (create-initial-sample coll)
     (iterate (comp (partial sort-by fitness) breed-subjects select-subjects))
     (map first)))
-
-(defn -main
-  []
-  (time
-    (println (->>
-               (solve ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"])
-               (drop 25)
-               (first)
-               (route)
-               (map (juxt fitness identity))
-               (join "\n")))))
