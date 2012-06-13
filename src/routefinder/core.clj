@@ -1,9 +1,10 @@
 (ns routefinder.core
-  (:use [korma.db]))
+  (:use [korma.db])
+  (:import java.math.RoundingMode))
 
 (defn round
   [s n]
-  (.setScale (bigdec n) s java.math.RoundingMode/HALF_EVEN))
+  (.setScale (bigdec n) s RoundingMode/HALF_EVEN))
 
 (defn shuffle-sub
   ([l]
@@ -13,8 +14,8 @@
   ([l s e]
     (vec (concat (subvec l 0 s) (shuffle (subvec l s e)) (subvec l e)))))
 
-(defn swap [v i1 i2]
-  (assoc v i2 (v i1) i1 (v i2)))
+(defn swap [v i j]
+  (assoc v j (v i) i (v j)))
 
 (defn rand-in
   ([k] (rand-int k))

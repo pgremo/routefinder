@@ -1,7 +1,7 @@
 (ns routefinder.genetic
   (:use clojure.tools.trace
         routefinder.core
-        routefinder.models
+        routefinder.model
         routefinder.a-star)
   (:use [clojure.string :only [join]])
   (:use [clojure.math.numeric-tower :only [abs]])
@@ -42,8 +42,7 @@
   (concat (take 10 coll) (repeatedly 90 #(tourny-select-subject coll))))
 
 (defn breed
-  "Decides whether to breed cleanly or with a mutation. Also provides a random
-  position for breeding if not provided"
+  "Swap two random elements after the first"
   [k]
   (if (< 0 (rand-int 2))
     k

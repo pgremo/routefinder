@@ -1,7 +1,5 @@
 (ns routefinder.a-star
-  (:use routefinder.models)
-  (:use [clojure.data.priority-map :only [priority-map]])
-  (:use [clojure.algo.generic.functor :only [fmap]]))
+  (:use [clojure.data.priority-map :only [priority-map]]))
 
 (defn a-star
   "Performs an a* search over the data using heuristic est-cost.
@@ -22,24 +20,13 @@
         (nil? e) "Path not found! No more elements to try!"
         (goal? e) (->>
                     (conj (iterate (comp second closed) p) e)
-                    (take-while (comp not nil?))
+                    (take-while (complement nil?))
                     reverse)
         :else (recur
                 (merge-with (partial min-key first)
                   (dissoc open e)
                   (into {} (for [[n ns] (neighbors e)
-                                 :when ((comp not closed) n)]
+                                 :when ((complement closed) n)]
                              [n [(+ ns s (est-cost n)) e]])))
                 (assoc closed e [s p]))))))
 
-(defn any-neighbor
-  [k]
-  (fmap (constantly 1) (jumps k)))
-
-(defn highsec-neighbor
-  [k]
-  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (jumps k)))
-
-(defn only-highsec-neighbor
-  [k]
-  (filter (comp (partial = 1) val) (highsec-neighbor k)))

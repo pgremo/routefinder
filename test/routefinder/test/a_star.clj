@@ -1,5 +1,6 @@
 (ns routefinder.test.a-star
   (:use [routefinder.core])
+  (:use [routefinder.model])
   (:use [routefinder.a-star])
   (:use [clojure.test]))
 
