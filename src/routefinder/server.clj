@@ -4,7 +4,7 @@
 
 (defdb eve {:classname "org.h2.Driver"
             :subprotocol "h2"
-            :subname "tcp://localhost/eve"
+            :subname "tcp://localhost/eve;SCHEMA_SEARCH_PATH=INFORMATION_SCHEMA,PUBLIC,STATIC"
             :user "sa"
             :password ""})
 
