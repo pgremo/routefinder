@@ -1,6 +1,4 @@
 (ns routefinder.test.a-star
-  (:use [routefinder.core])
-  (:use [routefinder.models.jumps])
   (:use [routefinder.a-star])
   (:use [clojure.test]))
 
@@ -12,5 +10,3 @@
 
 (deftest find-distances-from-red-a*-search
   (is (= '(:red :blue :green ) (a-star (fn [a] 0) #(get demo-graph %) :red #(= :green %)))))
-
-(prn (a-star (fn [a] 0) only-highsec-neighbor "Nonni" #(= "Jita" %)))

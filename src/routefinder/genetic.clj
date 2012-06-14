@@ -2,10 +2,7 @@
   (:use clojure.tools.trace
         routefinder.core
         routefinder.models.jumps
-        routefinder.a-star)
-  (:use [clojure.string :only [join]])
-  (:use [clojure.math.numeric-tower :only [abs]])
-  (:use [clojure.algo.generic.functor :only [fmap]]))
+        routefinder.a-star))
 
 (def path
   (memoize #(a-star (constantly 0) only-highsec-neighbor %1 (partial = %2))))
