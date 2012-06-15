@@ -1,1 +1,2 @@
-lein.bat run -m org.h2.tools.Server
+java -cp "`lein classpath`" org.h2.tools.Server
+
