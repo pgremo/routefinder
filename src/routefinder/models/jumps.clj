@@ -5,18 +5,18 @@
 
 (defentity JUMPS)
 
-(def jumps (->>
-             (select JUMPS)
-             (group-by :FROMSYSTEM )
-             (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (round 1 (:TOSECURITY b)))) {} %))))
+(def jumps (delay (->>
+                    (select JUMPS)
+                    (group-by :FROMSYSTEM )
+                    (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (round 1 (:TOSECURITY b)))) {} %)))))
 
 (defn any-neighbor
   [k]
-  (fmap (constantly 1) (jumps k)))
+  (fmap (constantly 1) (@jumps k)))
 
 (defn highsec-neighbor
   [k]
-  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (jumps k)))
+  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (@jumps k)))
 
 (defn only-highsec-neighbor
   [k]
