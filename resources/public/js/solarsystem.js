@@ -1,7 +1,9 @@
 $(function() {
 		function log( message ) {
-			$( "<div/>" ).text( message ).prependTo( "#log" );
-			$( "#log" ).scrollTop( 0 );
+            var html = '<input type="checkbox" checked="checked" id="waypoint-'+message+'" name="waypoint" value="'+message+'" /> <label for="waypoint-'+message+'">'+message+'</label>';
+//			$( "<div/>" ).text( message ).appendTo( "#log" );
+            $( "#log" ).append(html);
+//			$( "#log" ).scrollTop( 0 );
 		}
 
 		$( "#solarsystem" ).autocomplete({
@@ -9,7 +11,7 @@ $(function() {
 			minLength: 2,
 			select: function( event, ui ) {
 				log( ui.item ?
-					"Selected: " + ui.item.value + " aka " + ui.item.value :
+					ui.item.value :
 					"Nothing selected, input was " + this.value );
 			}
 		});

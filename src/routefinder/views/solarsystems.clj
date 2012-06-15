@@ -18,6 +18,7 @@
      (include-js "/js/ui/jquery.ui.widget.js")
      (include-js "/js/ui/jquery.ui.position.js")
      (include-js "/js/ui/jquery.ui.autocomplete.js")
+     (include-js "/js/ui/jquery.ui.button.js")
      (include-js "/js/solarsystem.js")]
     (form-to [:post "/solarsystems/search"]
       [:div.ui-widget (label "solarsystem" "Solar System Name")
