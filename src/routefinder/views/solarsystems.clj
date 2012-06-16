@@ -13,6 +13,8 @@
 (defpage "/solarsystems/search" []
   (common/layout
     [(include-css "/css/themes/base/jquery.ui.all.css")
+     (include-css "/css/solarsystems.css")
+     (include-js "/js/string.js")
      (include-js "/js/jquery-1.7.2.min.js")
      (include-js "/js/ui/jquery.ui.core.js")
      (include-js "/js/ui/jquery.ui.widget.js")
@@ -23,4 +25,4 @@
     (form-to [:post "/solarsystems/search"]
       [:div.ui-widget (label "solarsystem" "Solar System Name")
        (text-field "solarsystem")]
-      [:div.ui-widget [:div#log ]]) ))
+      [:div.ui-widget [:ol#log ]]) ))
