@@ -1,20 +1,24 @@
 <head>
   <script src="/js/route.js" type="text/javascript"></script>
-  <link type="text/css" rel="stylesheet" href="/css/route.css" />
+  <link type="text/css" rel="stylesheet" href="/css/route.css"/>
 </head>
 
 <form action="/route" method="POST">
   <div class="ui-widget">
     <label for="solarsystem">Solar System Name</label><input id="solarsystem" name="solarsystem" type="text">
   </div>
-  <div class="ui-widget">
-    <ol id="waypoints"></ol>
+  <div>
+    <ul class="ui-sortable" id="waypoints"></ul>
   </div>
   <input type="submit" class="button" value="Find Route">
 </form>
 
-<table>
+<table class="ui-widget">
   <tbody>
-    <tr><td>1</td><td></td><td>Jita</td></tr>
+  <tr>
+    <td>1</td>
+    <td></td>
+    <td>Some System</td>
+  </tr>
   </tbody>
 </table>
