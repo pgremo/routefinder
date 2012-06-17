@@ -1,10 +1,9 @@
 (ns routefinder.views.layout
-  (:require [net.cgrand.enlive-html :as html])
-  (:use noir.core
-        clojure.pprint))
+  (:use net.cgrand.enlive-html
+        noir.core))
 
-(html/deftemplate layout
+(deftemplate layout
   "templates/layout.html"
   [head body]
-  [:head ] (html/append head)
-  [:div#wrapper ] (html/content body))
+  [:head ] (append head)
+  [:div#wrapper ] (content body))
