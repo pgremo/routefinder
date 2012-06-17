@@ -4,7 +4,7 @@
         clojure.pprint))
 
 (html/deftemplate layout
-  "routefinder/views/layout.html"
+  "templates/layout.html"
   [head body]
   [:head ] (html/append head)
   [:div#wrapper ] (html/content body))

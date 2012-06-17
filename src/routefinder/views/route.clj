@@ -11,9 +11,6 @@
   (:use [clojure.string :only [join]])
   (:use [noir.core :only [defpage defpartial]]))
 
-
-;  ["Muvolailen" "Amarr" "Jita" "Rens" "Dodixie" "Mani" "Oimmo" "Dabrid"]
-
 (defn route-finder
   [nodes]
   (->>
@@ -25,22 +22,17 @@
     (flatten)
     (map (juxt (partial in? nodes) identity))))
 
-(html/defsnippet route-result
-  "routefinder/views/route.html" [:table ]
-  [nodes]
-
-  [:tr ] (html/clone-for [[index [waypoint segment]] (map-indexed #(vec %&) nodes)]
-           [[:td (html/nth-child 1)]] (html/content (String/valueOf index))
-           [[:td (html/nth-child 2)]] (html/content (String/valueOf waypoint))
-           [[:td (html/nth-child 3)]] (html/content segment)))
-
-(html/defsnippets "routefinder/views/route.html"
-  (route-form [:form ] [])
-  (route-form-header [:head :> :* ] []))
+(html/defsnippets "templates/route.html"
+  (form [:form ] [])
+  (header [:head :> :* ] [])
+  (result [:table ] [nodes] [:tr ] (html/clone-for [[index [waypoint segment]] (map-indexed #(vec %&) nodes)]
+                                     [[:td (html/nth-child 1)]] (html/content (String/valueOf index))
+                                     [[:td (html/nth-child 2)]] (html/content (String/valueOf waypoint))
+                                     [[:td (html/nth-child 3)]] (html/content segment))))
 
 (defpage [:post "/route"] {:keys [waypoint]}
-  (layout (route-form-header) (route-result (route-finder waypoint))))
+  (layout (header) (result (route-finder waypoint))))
 
 (defpage [:get "/route"] []
-  (layout (route-form-header) (route-form)))
+  (layout (header) (form)))
 
