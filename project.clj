@@ -5,7 +5,7 @@
                  [org.clojure/math.numeric-tower "0.0.1"]
                  [korma "0.3.0-beta10"]
                  [noir "1.3.0-beta3"]
-                 [ring/ring-core "1.1.1"]
+                 [enlive "1.0.1"]
                  [log4j "1.2.17" :exclusions [javax.mail/mail
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
