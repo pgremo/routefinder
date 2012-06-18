@@ -8,4 +8,4 @@ docs
 *.iml
 *.db
 target
-*.orig
+.DS_Store
