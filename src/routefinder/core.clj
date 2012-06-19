@@ -1,11 +1,6 @@
 (ns routefinder.core
   (:import java.math.RoundingMode))
 
-(defn round
-  "round n to s decimal places"
-  [s n]
-  (.setScale (bigdec n) s RoundingMode/HALF_EVEN))
-
 (defn shuffle-sub
   "shuffle a sub vector"
   ([l]

@@ -1,7 +1,7 @@
 (ns routefinder.views.solarsystem
-  (:use routefinder.models.solarsystems
-        noir.response
+  (:require [routefinder.models.solarsystems :as solarsystems])
+  (:use noir.response
         noir.core))
 
 (defpage "/solarsystem/search.json" {:keys [term]}
-  (json (map :SOLARSYSTEMNAME (solarsystems-by-name term))))
+  (json (map :SOLARSYSTEMNAME (solarsystems/like-name term))))

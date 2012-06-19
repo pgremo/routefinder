@@ -1,16 +1,5 @@
-CREATE VIEW PUBLIC.JUMPS(FROMSYSTEM, TOSYSTEM, TOSECURITY) AS
-SELECT
-    B.SOLARSYSTEMNAME AS FROMSYSTEM,
-    A.SOLARSYSTEMNAME AS TOSYSTEM,
-    A.SECURITY AS TOSECURITY
-FROM STATIC.MAPSOLARSYSTEMS A
-INNER JOIN STATIC.MAPSOLARSYSTEMJUMPS J
-    /* STATIC.PRIMARY_KEY_10: FROMSOLARSYSTEMID = A.SOLARSYSTEMID */
-    ON 1=1
-    /* WHERE A.SOLARSYSTEMID = J.FROMSOLARSYSTEMID
-    */
-INNER JOIN STATIC.MAPSOLARSYSTEMS B
-    /* STATIC.PRIMARY_KEY_8: SOLARSYSTEMID = J.TOSOLARSYSTEMID */
-    ON 1=1
-WHERE (A.SOLARSYSTEMID = J.FROMSOLARSYSTEMID)
-    AND (B.SOLARSYSTEMID = J.TOSOLARSYSTEMID)
+create view public.jumps(fromsystem, tosystem, tosecurity, cost) as
+select s.solarsystemname fromsystem, d.solarsystemname tosystem, round(d.security, 1) tosecurity, 1.0 as cost
+from static.mapsolarsystemjumps j
+join static.mapsolarsystems s on s.solarsystemid = j.fromsolarsystemid
+join static.mapsolarsystems d on d.solarsystemid = j.tosolarsystemid

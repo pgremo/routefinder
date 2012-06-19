@@ -4,7 +4,12 @@
 
 (defentity solarsystem (table :MAPSOLARSYSTEMS ))
 
-(defn solarsystems-by-name
+(defn like-name
   [name]
   (select solarsystem
     (where (like (sqlfn lower :SOLARSYSTEMNAME ) (str "%" (lower-case name) "%")))))
+
+(defn by-name
+  [name]
+  (select solarsystem
+    (where (= (sqlfn lower :SOLARSYSTEMNAME ) (lower-case name)))))

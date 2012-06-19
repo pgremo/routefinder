@@ -8,7 +8,7 @@
 (def jumps (delay (->>
                     (select JUMPS)
                     (group-by :FROMSYSTEM )
-                    (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (round 1 (:TOSECURITY b)))) {} %)))))
+                    (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (:TOSECURITY b))) {} %)))))
 
 (defn any-neighbor
   [k]
