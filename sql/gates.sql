@@ -1,3 +1,4 @@
+create view gates(sourceid, solarsystemid, destinationid, security, cost) as
 select s.itemid sourceid, s.solarsystemid,
     case when s.itemid = d.itemid then o.itemid else d.itemid end destinationid,
     round(case when s.itemid = d.itemid then o.security else d.security end, 1) security,

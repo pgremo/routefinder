@@ -11,13 +11,15 @@
                     (group-by :FROMSOLARSYSTEMID )
                     (fmap #(reduce (fn [a b] (assoc a (:TOSOLARSYSTEMID b) (:TOSECURITY b))) {} %)))))
 
+(def max-cost (- Double/MAX_VALUE 1000))
+
 (defn any-neighbor
   [k]
   (fmap (constantly 1) (@jumps k)))
 
 (defn highsec-neighbor
   [k]
-  (fmap #(if (>= % 0.5) 1 Integer/MAX_VALUE) (@jumps k)))
+  (fmap #(if (>= % 0.5) 1 max-cost) (@jumps k)))
 
 (defn only-highsec-neighbor
   [k]
