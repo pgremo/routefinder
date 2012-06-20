@@ -4,4 +4,4 @@
         noir.core))
 
 (defpage "/solarsystem/search.json" {:keys [term]}
-  (json (map :SOLARSYSTEMNAME (solarsystems/like-name term))))
+  (json (map #(assoc {} :label (:SOLARSYSTEMNAME %) :id (:SOLARSYSTEMID %)) (solarsystems/like-name term))))

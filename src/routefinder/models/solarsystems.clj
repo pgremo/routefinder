@@ -9,7 +9,7 @@
   (select solarsystem
     (where (like (sqlfn lower :SOLARSYSTEMNAME ) (str "%" (lower-case name) "%")))))
 
-(defn by-name
-  [name]
+(defn by-id
+  [id]
   (select solarsystem
-    (where (= (sqlfn lower :SOLARSYSTEMNAME ) (lower-case name)))))
+    (where {:SOLARSYSTEMID [= id]})))
