@@ -1,11 +1,11 @@
 (ns routefinder.genetic
   (:use clojure.tools.trace
         routefinder.core
-        routefinder.models.jumps
+        routefinder.models.gates
         routefinder.a-star))
 
 (def path
-  (memoize #(a-star (constantly 0) only-highsec-neighbor %1 (partial = %2))))
+  (memoize #(a-star (constantly 0) only-highsec-neighbor (find-start %1) (partial goal? %2))))
 
 (defn route
   [coll]

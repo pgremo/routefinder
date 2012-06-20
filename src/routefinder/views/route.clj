@@ -1,5 +1,6 @@
 (ns routefinder.views.route
-  (:require [routefinder.models.solarsystems :as solarsystems])
+  (:require [routefinder.models.solarsystems :as solarsystems]
+            [routefinder.models.gates :as gates])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.core
@@ -15,7 +16,7 @@
     (route)
     (map rest)
     (flatten)
-    (map (comp :SOLARSYSTEMNAME solarsystems/by-id))
+    (map (comp :SOLARSYSTEMNAME solarsystems/by-id :SOLARSYSTEMID gates/by-id))
     (map (juxt (partial in? nodes) identity))))
 
 (defsnippets "templates/route.html"
