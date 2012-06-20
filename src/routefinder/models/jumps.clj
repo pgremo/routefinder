@@ -10,19 +10,18 @@
 
 (defn by-from-system-id
   [k]
-  (reduce #(assoc %1 (:TOSOLARSYSTEMID %2) (:TOSECURITY %2))
-    {}
-    (select jumps
-      (where {:FROMSOLARSYSTEMID [= k]}))))
+  (map (juxt :TOSOLARSYSTEMID :TOSECURITY )
+    (select jumps (where {:FROMSOLARSYSTEMID [= k]}))))
 
 (defn any-neighbor
   [k]
-  (fmap (constantly 1) (by-from-system-id k)))
+  (map (juxt first (constantly 1)) (by-from-system-id k)))
 
 (defn highsec-neighbor
   [k]
-  (fmap #(if (>= % 0.5) 1 max-cost) (by-from-system-id k)))
+  (for [[id sec] (by-from-system-id k)]
+    [id (if (>= sec 0.5) 1 max-cost)]))
 
 (defn only-highsec-neighbor
   [k]
-  (filter (comp (partial = 1) val) (highsec-neighbor k)))
+  (filter (comp (partial = 1) second) (highsec-neighbor k)))
