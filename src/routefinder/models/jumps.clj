@@ -4,22 +4,24 @@
         routefinder.core)
   (:use [clojure.algo.generic.functor :only [fmap]]))
 
-(defentity JUMPS)
-
-(def jumps (delay (->>
-                    (select JUMPS)
-                    (group-by :FROMSOLARSYSTEMID )
-                    (fmap #(reduce (fn [a b] (assoc a (:TOSOLARSYSTEMID b) (:TOSECURITY b))) {} %)))))
+(defentity jumps (table :JUMPS ))
 
 (def max-cost (- Double/MAX_VALUE 1000))
 
+(defn by-from-system-id
+  [k]
+  (reduce #(assoc %1 (:TOSOLARSYSTEMID %2) (:TOSECURITY %2))
+    {}
+    (select jumps
+      (where {:FROMSOLARSYSTEMID [= k]}))))
+
 (defn any-neighbor
   [k]
-  (fmap (constantly 1) (@jumps k)))
+  (fmap (constantly 1) (by-from-system-id k)))
 
 (defn highsec-neighbor
   [k]
-  (fmap #(if (>= % 0.5) 1 max-cost) (@jumps k)))
+  (fmap #(if (>= % 0.5) 1 max-cost) (by-from-system-id k)))
 
 (defn only-highsec-neighbor
   [k]
