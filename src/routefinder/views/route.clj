@@ -1,4 +1,5 @@
 (ns routefinder.views.route
+  (:require [routefinder.models.solarsystems :as solarsystems])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.core
@@ -14,6 +15,7 @@
     (route)
     (map rest)
     (flatten)
+    (map (comp :SOLARSYSTEMNAME solarsystems/by-id))
     (map (juxt (partial in? nodes) identity))))
 
 (defsnippets "templates/route.html"
@@ -22,10 +24,10 @@
   (result [:table ] [nodes] [:tr ] (clone-for [[index [waypoint segment]] (map-indexed #(vec %&) nodes)]
                                      [[:td (nth-child 1)]] (content (String/valueOf index))
                                      [[:td (nth-child 2)]] (content (String/valueOf waypoint))
-                                     [[:td (nth-child 3)]] (content segment))))
+                                     [[:td (nth-child 3)]] (content (String/valueOf segment)))))
 
 (defpage [:post "/route"] {:keys [waypoint]}
-  (layout (header) (result (route-finder waypoint))))
+  (layout (header) (result (route-finder (map #(Long/valueOf %) waypoint)))))
 
 (defpage [:get "/route"] []
   (layout (header) (form)))

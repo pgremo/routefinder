@@ -1,5 +1,6 @@
 (ns routefinder.models.jumps
   (:use korma.core
+        clojure.tools.trace
         routefinder.core)
   (:use [clojure.algo.generic.functor :only [fmap]]))
 
@@ -7,8 +8,8 @@
 
 (def jumps (delay (->>
                     (select JUMPS)
-                    (group-by :FROMSYSTEM )
-                    (fmap #(reduce (fn [a b] (assoc a (:TOSYSTEM b) (:TOSECURITY b))) {} %)))))
+                    (group-by :FROMSOLARSYSTEMID )
+                    (fmap #(reduce (fn [a b] (assoc a (:TOSOLARSYSTEMID b) (:TOSECURITY b))) {} %)))))
 
 (defn any-neighbor
   [k]

@@ -1,6 +1,7 @@
 (ns routefinder.models.solarsystems
   (:use [clojure.string :only [lower-case]])
-  (:use korma.core))
+  (:use korma.core
+        clojure.tools.trace))
 
 (defentity solarsystem (table :MAPSOLARSYSTEMS ))
 
@@ -11,5 +12,5 @@
 
 (defn by-id
   [id]
-  (select solarsystem
-    (where {:SOLARSYSTEMID [= id]})))
+  (first (select solarsystem
+    (where {:SOLARSYSTEMID [= id]}))))
