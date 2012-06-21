@@ -9,7 +9,7 @@
 
 (defn route
   [coll]
-  (map path coll (drop 1 coll)))
+  (map #(apply path %) (partition 2 1 coll)))
 
 (defn distance
   "Determines the fitness of a given subject based on the
