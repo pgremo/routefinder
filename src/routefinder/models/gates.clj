@@ -7,15 +7,18 @@
 
 (defn by-id
   [j k]
-  (first (select gates (where {:SOURCEID [= j] :DESTINATIONID [= k]}))))
+  (first
+    (select gates (where {:SOURCEID [= j] :DESTINATIONID [= k]}))))
 
 (defn find-start
   [k]
-  ((comp :SOURCEID first) (select gates (where {:SOLARSYSTEMID [= k]}))))
+  ((comp :SOURCEID first)
+    (select gates (where {:SOURCESYSTEMID [= k]}))))
 
 (defn goal?
   [j k]
-  (not-empty (select gates (where {:SOLARSYSTEMID [= j] :SOURCEID [= k]}))))
+  (not-empty
+    (select gates (where {:SOURCESYSTEMID [= j] :SOURCEID [= k]}))))
 
 (defn any-neighbor
   [k]
@@ -32,6 +35,4 @@
   [k]
   (map
     (juxt :DESTINATIONID :COST )
-    (select gates
-      (where {:SOURCEID [= k]
-              :SECURITY [>= 0.5]}))))
+    (select gates (where {:SOURCEID [= k] :SECURITY [>= 0.5]}))))
