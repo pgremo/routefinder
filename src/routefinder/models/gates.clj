@@ -6,8 +6,8 @@
 (def max-cost (- Double/MAX_VALUE 1000))
 
 (defn by-id
-  [k]
-  (first (select gates (where {:SOURCEID [= k]}))))
+  [j k]
+  (first (select gates (where {:SOURCEID [= j] :DESTINATIONID [= k]}))))
 
 (defn find-start
   [k]

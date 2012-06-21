@@ -1,4 +1,5 @@
 (ns routefinder.core
+  (:use clojure.tools.trace)
   (:import java.math.RoundingMode))
 
 (defn shuffle-sub
@@ -23,4 +24,12 @@
   "true if seq contains elm"
   [seq elm]
   (some #(= elm %) seq))
+
+(deftrace interleave
+  [l1 l2]
+  (if (empty? l1)
+    l2
+    (cons (first l1) (interleave l2 (rest l1)))))
+
+
 

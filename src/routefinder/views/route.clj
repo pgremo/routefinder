@@ -1,10 +1,11 @@
 (ns routefinder.views.route
   (:require [routefinder.models.solarsystems :as solarsystems]
-            [routefinder.models.gates :as gates])
+            [routefinder.models.gates :as gates]
+            [routefinder.core :as core])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
-        routefinder.core
         routefinder.genetic
+        clojure.tools.trace
         noir.core))
 
 (defn route-finder
@@ -16,13 +17,13 @@
     (map rest)
     (flatten)
     (map (comp (juxt :SOLARSYSTEMID :COST) gates/by-id))
-    (map (juxt (partial in? nodes) (comp :SOLARSYSTEMNAME solarsystems/by-id :SOLARSYSTEMID gates/by-id) (comp :COST gates/by-id)))))
+    (map (juxt (partial core/in? nodes) (comp :SOLARSYSTEMNAME solarsystems/by-id :SOLARSYSTEMID gates/by-id) (comp :COST gates/by-id)))))
 
 (defn route-finder2
   [nodes]
-  (let [segments (route (nth 26 (solve nodes)))]
-    (for [[first second] (map () segments (rest segments))]
-      [])))
+  (let [[segments] (route (nth (solve nodes) 26))]
+    (for [{id :SOLARSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 (core/interleave segments (rest segments))))]
+      [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystems/by-id id)) cost])))
 
 (defsnippets "templates/route.html"
   (form [:form ] [])
@@ -34,7 +35,7 @@
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
 (defpage [:post "/route"] {:keys [waypoint]}
-  (layout (header) (result (route-finder (map #(Long/valueOf %) waypoint)))))
+  (layout (header) (result (route-finder2 (map #(Long/valueOf %) waypoint)))))
 
 (defpage [:get "/route"] []
   (layout (header) (form)))
