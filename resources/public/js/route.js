@@ -10,7 +10,7 @@ $(function() {
       minLength: 2,
       select: function(event, ui) {
         if (ui.item){
-          var html = '<li class="ui-state-default"><input type="hidden" id="waypoint-{0}" name="waypoint[]" value="{0}" /><span class="ui-icon ui-icon-triangle-2-n-s"></span><span class="waypoint-label">{1}</span><span class="ui-icon ui-icon-closethick-2-n-s"></span></li>';
+          var html = '<li class="ui-state-default"><input type="hidden" id="waypoint-{0}" name="waypoint[]" value="{0}" /><span class="hint ui-icon ui-icon-arrowthick-2-n-s"></span>{1}<span class="delete ui-icon ui-icon-closethick"></span></li>';
           $("#waypoints").append(html.format(ui.item.id, ui.item.label));
           $("#waypoints").sortable("refresh");
         }

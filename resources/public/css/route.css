@@ -1,19 +1,30 @@
-#sortable {
+#waypoints {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 60%;
+  width: 500px;
 }
 
-#sortable li {
+#waypoints li {
   margin: 0 3px 3px 3px;
   padding: 0.4em;
   padding-left: 1.5em;
   font-size: 1.4em;
   height: 18px;
+  position: relative;
 }
 
-#sortable li span {
+#waypoints span{
+  display: inline-block;
+}
+
+#waypoints .hint {
   position: absolute;
   margin-left: -1.3em;
+}
+
+#waypoints .delete {
+  position: absolute;
+  right: 0px;
+  margin-right: .3em;
 }
