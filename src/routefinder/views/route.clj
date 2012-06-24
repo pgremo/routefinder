@@ -7,14 +7,16 @@
         routefinder.genetic
         routefinder.a-star
         clojure.tools.trace
+        clojure.algo.generic.functor
         noir.core))
 
 (defn adjust-cost
   [k]
   (let [align 38.261724366908981079831213104493
-        warpspeed 0.75]
+        warpspeed 0.75
+        adjust (comp (partial + align) (partial / warpspeed))]
     (for [[id cost] (gates/only-highsec-neighbor k)]
-      [id ((comp (partial + align) (partial / warpspeed)) cost)])))
+      [id (adjust cost)])))
 
 (def path
   (memoize #(a-star (constantly 0) adjust-cost (gates/find-start %1) (partial gates/goal? %2))))
@@ -28,7 +30,7 @@
 
 (defn route-finder
   [nodes]
-  (let [[segments] (route (nth (solve fitness nodes) 26))]
+  (let [segments (flatten (route (nth (solve fitness nodes) 26)))]
     (for [{id :DESTINATIONSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 1 segments))]
       [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystems/by-id id)) cost])))
 

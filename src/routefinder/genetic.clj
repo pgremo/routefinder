@@ -1,5 +1,6 @@
 (ns routefinder.genetic
-  (:use routefinder.core))
+  (:use routefinder.core
+        clojure.tools.trace))
 
 (defn solve
   "Iterate over generations producing the most fit specimens"
