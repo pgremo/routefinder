@@ -5,12 +5,24 @@
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
+        routefinder.a-star
         clojure.tools.trace
         noir.core))
 
+
+(def path
+  (memoize #(a-star (constantly 0) gates/only-highsec-neighbor (gates/find-start %1) (partial gates/goal? %2))))
+
+(defn route
+  [coll]
+  (map #(apply path %) (partition 2 1 coll)))
+
+(def fitness
+  (memoize #(reduce + (map (comp dec count) (route %)))))
+
 (defn route-finder
   [nodes]
-  (let [[segments] (route (nth (solve nodes) 26))]
+  (let [[segments] (route (nth (solve fitness nodes) 26))]
     (for [{id :DESTINATIONSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 1 segments))]
       [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystems/by-id id)) cost])))
 
