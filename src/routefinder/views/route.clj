@@ -9,9 +9,15 @@
         clojure.tools.trace
         noir.core))
 
+(defn adjust-cost
+  [k]
+  (let [align 38.261724366908981079831213104493
+        warpspeed 0.75]
+    (for [[id cost] (gates/only-highsec-neighbor k)]
+      [id ((comp (partial + align) (partial / warpspeed)) cost)])))
 
 (def path
-  (memoize #(a-star (constantly 0) gates/only-highsec-neighbor (gates/find-start %1) (partial gates/goal? %2))))
+  (memoize #(a-star (constantly 0) adjust-cost (gates/find-start %1) (partial gates/goal? %2))))
 
 (defn route
   [coll]

@@ -37,5 +37,5 @@
   (let [align 38.261724366908981079831213104493
         warpspeed 0.75]
     (map
-      (juxt :DESTINATIONID (comp (partial + align) (partial / warpspeed) :COST ))
+      (juxt :DESTINATIONID :COST )
       (select gates (where {:SOURCEID [= k] :SECURITY [>= 0.5]})))))
