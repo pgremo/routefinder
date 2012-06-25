@@ -32,10 +32,7 @@
     [id (if (>= sec 0.5) 1 (+ max-cost cost))]))
 
 (defn only-highsec-neighbor
-  "take default cost and divide by warp speed (0.75 for freighter) then add time to align (including skills)"
   [k]
-  (let [align 38.261724366908981079831213104493
-        warpspeed 0.75]
-    (map
-      (juxt :DESTINATIONID :COST )
-      (select gates (where {:SOURCEID [= k] :SECURITY [>= 0.5]})))))
+  (map
+    (juxt :DESTINATIONID :COST )
+    (select gates (where {:SOURCEID [= k] :SECURITY [>= 0.5]}))))

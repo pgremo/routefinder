@@ -11,9 +11,10 @@
         noir.core))
 
 (defn adjust-cost
+  "take default cost and divide by warp speed (0.75 for freighter) then add time to align (including skills)"
   [k]
   (let [align 38.261724366908981079831213104493
-        warpspeed 0.75
+        warpspeed 0.75 ; 3 * warpSpeedMultiplier
         adjust (comp (partial + align) (partial / warpspeed))]
     (for [[id cost] (gates/only-highsec-neighbor k)]
       [id (adjust cost)])))
@@ -48,6 +49,3 @@
 
 (defpage [:get "/route"] []
   (layout (header) (form)))
-
-; warp speed = 3 * warpSpeedMultiplier
-
