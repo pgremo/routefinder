@@ -17,5 +17,5 @@
   :min-lein-version "2.0.0"
   :warn-on-reflection true
   :manifest {"Specification-Version" ~#(:version %)
-             "Implementation-Version" ~#(format "%s+build.%s" (:version %) (System/getProperty "build.number"))}
+             "Implementation-Version" ~#(format "%s+build.%s" (:version %) (System/getenv "build.number"))}
   :description "find shortest route between an arbitrary set of points")
