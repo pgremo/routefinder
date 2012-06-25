@@ -1,12 +1,11 @@
 (ns routefinder.views.route
-  (:require [routefinder.models.solarsystems :as solarsystems]
+  (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
             [routefinder.core :as core])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
         routefinder.a-star
-        clojure.tools.trace
         clojure.algo.generic.functor
         noir.core))
 
@@ -33,7 +32,7 @@
   [nodes]
   (let [segments (flatten (route (nth (solve fitness nodes) 26)))]
     (for [{id :DESTINATIONSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 1 segments))]
-      [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystems/by-id id)) cost])))
+      [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystem/by-id id)) cost])))
 
 (defsnippets "templates/route.html"
   (form [:form ] [])

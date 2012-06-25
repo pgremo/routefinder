@@ -1,7 +1,6 @@
-(ns routefinder.models.solarsystems
+(ns routefinder.models.solarsystem
   (:use [clojure.string :only [lower-case]])
-  (:use korma.core
-        clojure.tools.trace))
+  (:use korma.core))
 
 (defentity solarsystem (table :MAPSOLARSYSTEMS ))
 

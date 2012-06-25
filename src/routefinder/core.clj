@@ -1,5 +1,4 @@
 (ns routefinder.core
-  (:use clojure.tools.trace)
   (:import java.math.RoundingMode))
 
 (defn shuffle-sub

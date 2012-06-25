@@ -1,5 +1,5 @@
 (ns routefinder.models.gates
-  (:use korma.core clojure.tools.trace))
+  (:use korma.core))
 
 (defentity gates (table :GATES ))
 
