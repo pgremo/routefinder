@@ -1,6 +1,7 @@
 (ns routefinder.server
   (:use [korma.db])
-  (:require [noir.server :as server]))
+  (:require [noir.server :as server])
+  (:gen-class))
 
 (defdb eve {:classname "org.h2.Driver"
             :subprotocol "h2"
