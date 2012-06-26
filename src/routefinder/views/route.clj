@@ -16,7 +16,7 @@
         warpspeed 0.75 ; 3 * warpSpeedMultiplier
         adjust (comp (partial + align) (partial / warpspeed))]
     (for [[id cost] (gates/only-highsec-neighbor k)]
-      [id (adjust cost)])))
+      [id (if (not= 1.0 cost) (adjust cost) 1.0)])))
 
 (def path
   (memoize #(a-star (constantly 0) adjust-cost (gates/find-start %1) (partial gates/goal? %2))))
