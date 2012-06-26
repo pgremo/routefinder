@@ -24,4 +24,10 @@
   [seq elm]
   (some (partial = elm) seq))
 
+(defn ln
+  [x]
+  (Math/log x))
 
+(defn pow
+  [x y]
+  (Math/pow x y))

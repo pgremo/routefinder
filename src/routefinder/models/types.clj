@@ -11,12 +11,13 @@
 
 (defn ship-by-name
   [k]
-  (map #(into {} (concat (map (juxt :ATTRIBUTE :VALUE ) %) {:TYPE (:TYPE (first %))}))
-    (select types (where {:TYPE [= k] :CATEGORY [= "Ship"]}))))
+  (let [rows (select types (where {:TYPE [= k] :CATEGORY [= "Ship"]}))]
+    (if (empty? rows) rows
+      (into {} (concat (map (juxt (comp keyword :ATTRIBUTE ) :VALUE ) rows) {:TYPE (:TYPE (first rows))})))))
 
 (defn ship-like-name
   [name]
-  (map #(into {} (concat (map (juxt :ATTRIBUTE :VALUE ) %) {:TYPE (:TYPE (first %))}))
+  (map #(into {} (concat (map (juxt (comp keyword :ATTRIBUTE ) :VALUE ) %) {:TYPE (:TYPE (first %))}))
     (vals (group-by :TYPE (select types
                             (where (and (= :CATEGORY "Ship")
                                      (like (sqlfn lower :TYPE ) (str "%" (lower-case name) "%")))))))))

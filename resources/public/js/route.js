@@ -17,5 +17,13 @@ $(function() {
       }
     });
 
+    $("#ship-search").autocomplete({
+      source: "/ship/search.json",
+      minLength: 2,
+      select: function(event, ui) {
+        $("#ship").val(ui.item.label);
+      }
+    });
+
     $("input[type=submit]").button();
   });

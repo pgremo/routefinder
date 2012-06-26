@@ -1,36 +1,32 @@
 (ns routefinder.views.route
   (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
+            [routefinder.models.types :as types]
             [routefinder.core :as core])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
         routefinder.a-star
-        clojure.algo.generic.functor
         noir.core))
 
-(defn adjust-cost
-  "take default cost and divide by warp speed (0.75 for freighter) then add time to align (including skills)"
-  [k]
-  (let [align 38.261724366908981079831213104493
-        warpspeed 0.75 ; 3 * warpSpeedMultiplier
-        adjust (comp (partial + align) (partial / warpspeed))]
-    (for [[id cost] (gates/only-highsec-neighbor k)]
-      [id (if (not= 1.0 cost) (adjust cost) 1.0)])))
+(defn find-route
+  [nodes ship]
+  (let [warp-speed (* 3.0 (:warpSpeedMultiplier ship))
 
-(def path
-  (memoize #(a-star (constantly 0) adjust-cost (gates/find-start %1) (partial gates/goal? %2))))
+        align-time 38.261724366908981079831213104493 ; (* (:agility ship) (:mass ship) (pow 10 -6) (- (log .75)) (- 1.0 (* .05 (:evasiveManeuvering character))) (- 1.0 (* .05 (:advancedSpaceshipCommand character))) (- 1.0 (* .02 (:spaceshipCommand character))))
 
-(defn route
-  [coll]
-  (map #(apply path %) (partition 2 1 coll)))
+        adjust (comp (partial + align-time) (partial / warp-speed))
 
-(def fitness
-  (memoize #(reduce + (map (comp dec count) (route %)))))
+        adjust-cost (fn [k] (for [[id cost] (gates/only-highsec-neighbor k)] [id (if (not= 1.0 cost) (adjust cost) 1.0)]))
 
-(defn route-finder
-  [nodes]
-  (let [segments (flatten (route (nth (solve fitness nodes) 26)))]
+        path (memoize #(a-star (constantly 0) adjust-cost (gates/find-start %1) (partial gates/goal? %2)))
+
+        route (fn [coll] (map #(apply path %) (partition 2 1 coll)))
+
+        fitness (memoize #(reduce + (map (comp dec count) (route %))))
+
+        segments (flatten (route (nth (solve fitness nodes) 26)))]
+
     (for [{id :DESTINATIONSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 1 segments))]
       [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystem/by-id id)) cost])))
 
@@ -43,8 +39,8 @@
                                      [[:td (nth-child 3)]] (content (String/valueOf segment))
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
-(defpage [:post "/route"] {:keys [waypoint]}
-  (layout (header) (result (route-finder (map #(Long/valueOf %) waypoint)))))
+(defpage [:post "/route"] {:keys [waypoint ship]}
+  (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship)))))
 
 (defpage [:get "/route"] []
   (layout (header) (form)))
