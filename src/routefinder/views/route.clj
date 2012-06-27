@@ -1,19 +1,38 @@
 (ns routefinder.views.route
   (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
-            [routefinder.models.types :as types]
-            [routefinder.core :as core])
+            [routefinder.models.types :as types])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
         routefinder.a-star
+        routefinder.core
+        clojure.tools.trace
         noir.core))
+
+(def select-vals (comp vals select-keys))
+
+(deftrace calc-agility-skill
+  "stub method!  Note:  use :advancedAgility flag on ship to determine whether to include Advanced Spaceship Command"
+  []
+  (let [skills '({:type "Evasive Maneuvering" :agilityBonus -5 :level 5} {:type "Spaceship Command" :agilityBonus -5 :level 5} {:type "Advanced Spaceship Command" :agilityBonus -5 :level 4})
+        needed #{"Evasive Maneuvering" "Spaceship Command" "Advanced Spaceship Command"}
+        filtered (filter (comp needed :type) skills)]
+    (reduce #(* %1 (/ (+ 100 (* (:agilityBonus %2) (:level %2))) 100)) 1.0 filtered)))
+
+(deftrace calc-agility-ship
+  [ship]
+  (* (:agility ship) (:mass ship) 1e-6 (- (ln 0.25))))
+
+(deftrace calc-align-time
+  [ship]
+  (* (calc-agility-ship ship) (calc-agility-skill)))
 
 (defn find-route
   [nodes ship]
   (let [warp-speed (* 3.0 (:warpSpeedMultiplier ship))
 
-        align-time 38.261724366908981079831213104493 ; (* (:agility ship) (:mass ship) (pow 10 -6) (- (log .75)) (- 1.0 (* .05 (:evasiveManeuvering character))) (- 1.0 (* .05 (:advancedSpaceshipCommand character))) (- 1.0 (* .02 (:spaceshipCommand character))))
+        align-time (calc-align-time ship)
 
         adjust (comp (partial + align-time) (partial / warp-speed))
 
@@ -28,7 +47,7 @@
         segments (flatten (route (nth (solve fitness nodes) 26)))]
 
     (for [{id :DESTINATIONSYSTEMID cost :COST} (map #(apply gates/by-id %) (partition 2 1 segments))]
-      [(core/in? nodes id) (:SOLARSYSTEMNAME (solarsystem/by-id id)) cost])))
+      [(in? nodes id) (:SOLARSYSTEMNAME (solarsystem/by-id id)) cost])))
 
 (defsnippets "templates/route.html"
   (form [:form ] [])
