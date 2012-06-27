@@ -8,25 +8,20 @@
         routefinder.a-star
         routefinder.core
         clojure.tools.trace
+        clojure.algo.generic.functor
         noir.core))
 
-(def select-vals (comp vals select-keys))
+(def skills '({:type "Evasive Maneuvering" :agilityBonus -5 :level 5} {:type "Spaceship Command" :agilityBonus -2 :level 5} {:type "Advanced Spaceship Command" :agilityBonus -5 :level 4}))
 
-(deftrace calc-agility-skill
-  "stub method!  Note:  use :advancedAgility flag on ship to determine whether to include Advanced Spaceship Command"
-  []
-  (let [skills '({:type "Evasive Maneuvering" :agilityBonus -5 :level 5} {:type "Spaceship Command" :agilityBonus -5 :level 5} {:type "Advanced Spaceship Command" :agilityBonus -5 :level 4})
-        needed #{"Evasive Maneuvering" "Spaceship Command" "Advanced Spaceship Command"}
-        filtered (filter (comp needed :type) skills)]
-    (reduce #(* %1 (/ (+ 100 (* (:agilityBonus %2) (:level %2))) 100)) 1.0 filtered)))
-
-(deftrace calc-agility-ship
-  [ship]
-  (* (:agility ship) (:mass ship) 1e-6 (- (ln 0.25))))
+(deftrace agility-skill-value
+  [[skill]]
+  (+ 1.0 (* (:agilityBonus skill) (:level skill) 0.01)))
 
 (deftrace calc-align-time
   [ship]
-  (* (calc-agility-ship ship) (calc-agility-skill)))
+  (let [{spaceship-command "Spaceship Command" evasive-maneuvering "Evasive Maneuvering" advanced-spaceship-command "Advanced Spaceship Command" :or {spaceship-command 1.0 evasive-maneuvering 1.0 advanced-spaceship-command 1.0}} (fmap agility-skill-value (group-by :type skills))
+        {:keys [agility mass]} ship]
+    (* 1e-6 (- (ln 0.25)) agility mass spaceship-command evasive-maneuvering advanced-spaceship-command)))
 
 (defn find-route
   [nodes ship]
