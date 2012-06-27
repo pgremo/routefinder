@@ -1,4 +1,5 @@
 (ns routefinder.core
+  (:use clojure.string)
   (:import java.math.RoundingMode))
 
 (defn shuffle-sub
@@ -27,3 +28,20 @@
 (defn ln
   [x]
   (Math/log x))
+
+(defn lower-first
+  [word]
+  (apply str (Character/toLowerCase (first word)) (rest word)))
+
+(defn upper-first
+  [word]
+  (apply str (Character/toUpperCase (first word)) (rest word)))
+
+(defn string->keyword
+  [x]
+  (let [[y & ys] (split x #"\s")]
+    (keyword (apply str (conj (map upper-first ys) (lower-first y))))))
+
+(defn map-keys
+  [f m]
+  (into {} (for [[k v] m] [(f k) v])))

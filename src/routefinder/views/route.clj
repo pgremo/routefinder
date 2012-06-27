@@ -14,14 +14,16 @@
 (def skills '({:type "Evasive Maneuvering" :agilityBonus -5 :level 5} {:type "Spaceship Command" :agilityBonus -2 :level 5} {:type "Advanced Spaceship Command" :agilityBonus -5 :level 4}))
 
 (deftrace agility-skill-value
-  [[skill]]
-  (+ 1.0 (* (:agilityBonus skill) (:level skill) 0.01)))
+  [{:keys [agilityBonus level]}]
+  (+ 1.0 (* agilityBonus level 0.01)))
 
 (deftrace calc-align-time
   [ship]
-  (let [{spaceship-command "Spaceship Command" evasive-maneuvering "Evasive Maneuvering" advanced-spaceship-command "Advanced Spaceship Command" :or {spaceship-command 1.0 evasive-maneuvering 1.0 advanced-spaceship-command 1.0}} (fmap agility-skill-value (group-by :type skills))
+  (let [{:keys [spaceshipCommand evasiveManeuvering advancedSpaceshipCommand]
+         :or {spaceshipCommand 1.0 evasiveManeuvering 1.0 advancedSpaceshipCommand 1.0}}
+        (into {} (map (juxt (comp string->keyword :type ) agility-skill-value) skills))
         {:keys [agility mass]} ship]
-    (* 1e-6 (- (ln 0.25)) agility mass spaceship-command evasive-maneuvering advanced-spaceship-command)))
+    (* 1e-6 (- (ln 0.25)) agility mass spaceshipCommand evasiveManeuvering advancedSpaceshipCommand)))
 
 (defn find-route
   [nodes ship]
