@@ -7,6 +7,7 @@
         routefinder.genetic
         routefinder.a-star
         routefinder.core
+        clojure.tools.trace
         clojure.algo.generic.functor
         noir.core))
 
@@ -14,13 +15,23 @@
   [{:keys [agilityBonus level]}]
   (+ 1.0 (* agilityBonus level 0.01)))
 
-(defn calc-align-time
+(def agility-skills #{{:typeid 3327 :agilityBonus -2} {:typeid 3453 :agilityBonus -5}})
+
+(deftrace calc-align-time
   [ship skills]
-  (let [{:keys [spaceshipCommand evasiveManeuvering advancedSpaceshipCommand]
-         :or {spaceshipCommand 1.0 evasiveManeuvering 1.0 advancedSpaceshipCommand 1.0}}
-        (into {} (map (juxt (comp string->keyword :type ) agility-skill-value) skills))
+  (let [converted (into {} (map (juxt (comp string->keyword :type ) agility-skill-value) skills))
+
+        {:keys [spaceshipCommand evasiveManeuvering] :or {spaceshipCommand 1.0 evasiveManeuvering 1.0}} converted
+
+        advancedSpaceshipCommand (if (= (:advancedAgility ship) 1.0) (:advancedSpaceshipCommand converted) 1.0)
+
+        freighterBonusA2 = (:freighterBonusA2 ship)
+
+        feighter 1.0
+
         {:keys [agility mass]} ship]
-    (* 1e-6 (- (ln 0.25)) agility mass spaceshipCommand evasiveManeuvering advancedSpaceshipCommand)))
+
+    (* 1e-6 (- (ln 0.25)) agility mass spaceshipCommand evasiveManeuvering advancedSpaceshipCommand feighter)))
 
 (defn find-route
   [nodes ship skills]
@@ -53,7 +64,7 @@
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
 (defpage [:post "/route"] {:keys [waypoint ship]}
-  (let [skills '({:type "Evasive Maneuvering" :agilityBonus -5 :level 5} {:type "Spaceship Command" :agilityBonus -2 :level 5} {:type "Advanced Spaceship Command" :agilityBonus -5 :level 4})]
+  (let [skills '({:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4})]
     (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship) skills)))))
 
 (defpage [:get "/route"] []

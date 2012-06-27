@@ -9,16 +9,18 @@
   [k]
   (select types (where {:TYPE [= k]})))
 
+(defn- pivot
+  [k]
+  (into {} (concat (map (juxt (comp keyword :ATTRIBUTE ) :VALUE ) k) (select-keys (first k) [:TYPE ]))))
+
 (defn ship-by-name
   [k]
   (let [rows (select types (where {:TYPE [= k] :CATEGORY [= "Ship"]}))]
-    (if (empty? rows) rows
-      (into {} (concat (map (juxt (comp keyword :ATTRIBUTE ) :VALUE ) rows) {:TYPE (:TYPE (first rows))})))))
+    (if (empty? rows) rows (pivot rows))))
 
 (defn ship-like-name
   [name]
-  (map #(into {} (concat (map (juxt (comp keyword :ATTRIBUTE ) :VALUE ) %) {:TYPE (:TYPE (first %))}))
+  (map pivot
     (vals (group-by :TYPE (select types
                             (where (and (= :CATEGORY "Ship")
                                      (like (sqlfn lower :TYPE ) (str "%" (lower-case name) "%")))))))))
-
