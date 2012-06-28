@@ -6,6 +6,9 @@ from (
   join static.dgmtypeattributes ta on ta.typeid = t.typeid
   join static.dgmattributetypes at on at.attributeid = ta.attributeid
   union
+  select t.groupid, t.typeid, t.typename type, 'TYPEID' attribute, t.typeid value, t.published
+  from static.invtypes t
+  union
   select t.groupid, t.typeid, t.typename type, 'mass' attribute, t.mass value, t.published
   from static.invtypes t
   union

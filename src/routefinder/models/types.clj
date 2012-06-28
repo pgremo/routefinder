@@ -32,10 +32,10 @@
 (defn skill-by-id
   [k]
   (let [rows (select types (where {:TYPEID [= k] :CATEGORY [= "Skill"]}))]
-    (if (empty? rows) nil (first (pivot rows)))))
+    (if (empty? rows) nil (pivot rows))))
 
 (defn skill-by-name
   [k]
   (let [rows (select types (where {:TYPE [= k] :CATEGORY [= "Skill"]}))]
-    (if (empty? rows) nil (first (pivot rows)))))
+    (if (empty? rows) nil (pivot rows))))
 

@@ -8,30 +8,25 @@
         routefinder.genetic
         routefinder.a-star
         routefinder.core
-        clojure.tools.trace
         clojure.algo.generic.functor
         noir.core))
-
-(def agility-skills #{{:typeid 3327} {:typeid 3453}})
-(def advanced-spaceship-command #{{:typeid 20342}})
 
 (defn agility-skill-value
   [{:keys [agilityBonus level]}]
   (+ 1.0 (* agilityBonus level 0.01)))
 
-(deftrace calc-align-time
+(defn calc-align-time
   [ship skills]
-  (let [converted (set/join (all-skills) skills)
+  (let [jump-freighters (set (map types/ship-by-name '("Anshar" "Ark" "Nomad" "Rhea")))
+        base-agility-skills (set (map types/skill-by-name '("Spaceship Command" "Evasive Maneuvering")))
 
-        agility-bonus (concat agility-skills (if (= (:advancedAgility ship) 1.0) advanced-spaceship-command))
-
-        freighterBonusA2 (:freighterBonusA2 ship)
-
-        feighter (if freighterBonusA2 (join #{(skill-by-id (:requiredSkill1 ))} converted))
+        agility-bonus (set/select (complement nil?) (conj base-agility-skills
+                                                      (if (= (:advancedAgility ship) 1.0) (types/skill-by-name "Advanced Spaceship Command"))
+                                                      (if (contains? jump-freighters ship) (assoc (types/skill-by-id (:requiredSkill1 ship)) :agilityBonus (:freighterBonusA1 ship)))))
 
         {:keys [agility mass]} ship]
 
-    (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join converted agility-bonus))) feighter)))
+    (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join skills agility-bonus))))))
 
 (defn find-route
   [nodes ship skills]
@@ -64,7 +59,7 @@
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
 (defpage [:post "/route"] {:keys [waypoint ship]}
-  (let [skills #{{:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4}}]
+  (let [skills #{{:TYPEID 3453.0 :level 5} {:TYPEID 3327.0 :level 5} {:TYPEID 20342.0 :level 4}}]
     (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship) skills)))))
 
 (defpage [:get "/route"] []
