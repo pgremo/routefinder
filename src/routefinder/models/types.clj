@@ -24,3 +24,18 @@
     (vals (group-by :TYPE (select types
                             (where (and (= :CATEGORY "Ship")
                                      (like (sqlfn lower :TYPE ) (str "%" (lower-case name) "%")))))))))
+
+(defn all-skills
+  []
+  (select types (where {:CATEGORY [= "Skills"]})))
+
+(defn skill-by-id
+  [k]
+  (let [rows (select types (where {:TYPEID [= k] :CATEGORY [= "Skill"]}))]
+    (if (empty? rows) nil (first (pivot rows)))))
+
+(defn skill-by-name
+  [k]
+  (let [rows (select types (where {:TYPE [= k] :CATEGORY [= "Skill"]}))]
+    (if (empty? rows) nil (first (pivot rows)))))
+

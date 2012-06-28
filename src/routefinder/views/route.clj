@@ -1,7 +1,8 @@
 (ns routefinder.views.route
   (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
-            [routefinder.models.types :as types])
+            [routefinder.models.types :as types]
+            [clojure.set :as set])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
@@ -11,27 +12,26 @@
         clojure.algo.generic.functor
         noir.core))
 
+(def agility-skills #{{:typeid 3327} {:typeid 3453}})
+(def advanced-spaceship-command #{{:typeid 20342}})
+
 (defn agility-skill-value
   [{:keys [agilityBonus level]}]
   (+ 1.0 (* agilityBonus level 0.01)))
 
-(def agility-skills #{{:typeid 3327 :agilityBonus -2} {:typeid 3453 :agilityBonus -5}})
-
 (deftrace calc-align-time
   [ship skills]
-  (let [converted (into {} (map (juxt (comp string->keyword :type ) agility-skill-value) skills))
+  (let [converted (set/join (all-skills) skills)
 
-        {:keys [spaceshipCommand evasiveManeuvering] :or {spaceshipCommand 1.0 evasiveManeuvering 1.0}} converted
+        agility-bonus (concat agility-skills (if (= (:advancedAgility ship) 1.0) advanced-spaceship-command))
 
-        advancedSpaceshipCommand (if (= (:advancedAgility ship) 1.0) (:advancedSpaceshipCommand converted) 1.0)
+        freighterBonusA2 (:freighterBonusA2 ship)
 
-        freighterBonusA2 = (:freighterBonusA2 ship)
-
-        feighter 1.0
+        feighter (if freighterBonusA2 (join #{(skill-by-id (:requiredSkill1 ))} converted))
 
         {:keys [agility mass]} ship]
 
-    (* 1e-6 (- (ln 0.25)) agility mass spaceshipCommand evasiveManeuvering advancedSpaceshipCommand feighter)))
+    (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join converted agility-bonus))) feighter)))
 
 (defn find-route
   [nodes ship skills]
@@ -64,7 +64,7 @@
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
 (defpage [:post "/route"] {:keys [waypoint ship]}
-  (let [skills '({:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4})]
+  (let [skills #{{:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4}}]
     (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship) skills)))))
 
 (defpage [:get "/route"] []
