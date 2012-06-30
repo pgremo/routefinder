@@ -2,7 +2,8 @@
   (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
             [routefinder.models.types :as types]
-            [clojure.set :as set])
+            [clojure.set :as set]
+            [clojure.string :as string])
   (:use net.cgrand.enlive-html
         routefinder.views.layout
         routefinder.genetic
@@ -17,12 +18,12 @@
 
 (defn calc-align-time
   [ship skills]
-  (let [jump-freighters (set (map types/ship-by-name '("Anshar" "Ark" "Nomad" "Rhea")))
-        base-agility-skills (set (map types/skill-by-name '("Spaceship Command" "Evasive Maneuvering")))
+  (let [jump-freighters (set (types/by-group "Jump Freighter"))
+        base-agility-skills (set (map types/skill-by-name ["Spaceship Command" "Evasive Maneuvering"]))
 
         agility-bonus (set/select (complement nil?) (conj base-agility-skills
                                                       (if (= (:advancedAgility ship) 1.0) (types/skill-by-name "Advanced Spaceship Command"))
-                                                      (if (contains? jump-freighters ship) (assoc (types/skill-by-id (:requiredSkill1 ship)) :agilityBonus (:freighterBonusA1 ship)))))
+                                                      (if (contains? jump-freighters ship) (assoc (types/by-id (:requiredSkill1 ship)) :agilityBonus (:freighterBonusA1 ship)))))
         {:keys [agility mass]} ship]
 
     (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join skills agility-bonus))))))
