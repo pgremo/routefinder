@@ -23,7 +23,6 @@
         agility-bonus (set/select (complement nil?) (conj base-agility-skills
                                                       (if (= (:advancedAgility ship) 1.0) (types/skill-by-name "Advanced Spaceship Command"))
                                                       (if (contains? jump-freighters ship) (assoc (types/skill-by-id (:requiredSkill1 ship)) :agilityBonus (:freighterBonusA1 ship)))))
-
         {:keys [agility mass]} ship]
 
     (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join skills agility-bonus))))))
@@ -59,7 +58,7 @@
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
 (defpage [:post "/route"] {:keys [waypoint ship]}
-  (let [skills #{{:TYPEID 3453.0 :level 5} {:TYPEID 3327.0 :level 5} {:TYPEID 20342.0 :level 4}}]
+  (let [skills #{{:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4}}]
     (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship) skills)))))
 
 (defpage [:get "/route"] []
