@@ -1,35 +1,36 @@
 <head>
-    <script src="/js/route.js" type="text/javascript"></script>
-    <link type="text/css" rel="stylesheet" href="/css/route.css"/>
+  <script src="/js/route.js" type="text/javascript"></script>
+  <link type="text/css" rel="stylesheet" href="/css/route.css"/>
 </head>
 
 <form action="/route" method="POST">
-    <div class="left">
-        <div>
-            <label for="solarsystem">Solar System Name</label><input id="solarsystem" name="solarsystem" type="text">
-        </div>
-        <div>
-            <ul id="waypoints"></ul>
-        </div>
+  <div class="left">
+    <div>
+      <label for="solarsystem">Solar System Name</label><input id="solarsystem" name="solarsystem" type="text">
     </div>
-    <div class="right">
-        <div>
-            <label for="ship-search">Ship</label><input id="ship-search" name="ship-search" type="text">
-        </div>
-        <div>
-            <label for="ship">Selected Ship</label><input type="text" name="ship" id="ship" readonly="readonly">
-        </div>
+    <div>
+      <ul id="waypoints"></ul>
     </div>
-    <input type="submit" class="button" value="Find Route">
+  </div>
+  <div class="right">
+    <div>
+      <label for="ship-search">Ship</label><input id="ship-search" name="ship-search" type="text">
+    </div>
+    <div>
+      <label for="ship-selected">Selected Ship</label><input type="text" name="ship-name" id="ship-selected" readonly="readonly">
+      <input type="hidden" name="ship"/>
+    </div>
+  </div>
+  <input type="submit" class="button" value="Find Route">
 </form>
 
 <table class="ui-widget">
-    <tbody>
-    <tr>
-        <td>1</td>
-        <td></td>
-        <td>Some System</td>
-        <td>13.4</td>
-    </tr>
-    </tbody>
+  <tbody>
+  <tr>
+    <td>1</td>
+    <td></td>
+    <td>Some System</td>
+    <td>13.4</td>
+  </tr>
+  </tbody>
 </table>

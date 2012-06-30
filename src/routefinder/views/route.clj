@@ -60,7 +60,7 @@
 
 (defpage [:post "/route"] {:keys [waypoint ship]}
   (let [skills #{{:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4}}]
-    (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/ship-by-name ship) skills)))))
+    (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/by-id ship) skills)))))
 
 (defpage [:get "/route"] []
   (layout (header) (form)))

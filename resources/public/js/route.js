@@ -21,7 +21,8 @@ $(function() {
       source: "/ship/search.json",
       minLength: 2,
       select: function(event, ui) {
-        $("#ship").val(ui.item.label);
+        $("input[name=ship]").val(ui.item.id);
+        $("#ship-selected").val(ui.item.label)
       }
     });
 
