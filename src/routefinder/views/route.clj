@@ -50,7 +50,7 @@
       [(in? nodes id) (:SOLARSYSTEMNAME (solarsystem/by-id id)) cost])))
 
 (defsnippets "templates/route.html"
-  (form [:form ] [])
+  (form [:#theform ] [])
   (header [:head :> :* ] [])
   (result [:table ] [nodes] [:tr ] (clone-for [[index [waypoint segment cost]] (map-indexed #(vec %&) nodes)]
                                      [[:td (nth-child 1)]] (content (String/valueOf index))

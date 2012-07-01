@@ -2,15 +2,11 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 500px;
+  width: 11em;
 }
 
 #waypoints li {
-  margin: 0 3px 3px 3px;
-  padding: 0.4em;
-  padding-left: 1.5em;
-  font-size: 1.4em;
-  height: 18px;
+  padding-left: 1em;
   position: relative;
 }
 
@@ -20,11 +16,98 @@
 
 #waypoints .hint {
   position: absolute;
-  margin-left: -1.3em;
+  margin-left: -1em;
 }
 
 #waypoints .delete {
   position: absolute;
   right: 0px;
-  margin-right: .3em;
+  margin-right: .1em;
 }
+
+form>div:nth-of-type(1){
+  position: absolute;
+}
+
+form>div:nth-of-type(2){
+  position: absolute;
+  right: 0px;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	}
+#theform {
+	width: 40em;
+	}
+#theform fieldset {
+	height: 20em;
+	width: 11em;
+	border: 0;
+	margin: 0;
+	padding: 1em;
+	float: left;
+	}
+#theform fieldset legend {
+	font-size: 4em;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	}
+#theform fieldset legend span {
+	display: none;
+	}
+#theform fieldset h3 {
+	height: 4em;
+	font-size: 1em;
+	}
+#theform fieldset div.help {
+	font-size: 0.7em;
+	font-weight: bold;
+	height: 5em;
+	}
+#theform fieldset label {
+	font-size: 0.7em;
+	display: block;
+	line-height: 1.5em;
+	}
+#theform fieldset input {
+	font-size: 0.8em;
+	height: 1.2em;
+	}
+
+#theform #pt4 {
+	clear: both;
+	width: 38em;
+	height: 5em;
+	border-width: 10px 0;
+	padding: 1em;
+	}
+#theform #pt4 legend {
+	display: none;
+	}
+#theform #pt4 h3 {
+	display: none;
+	}
+#theform #pt4 #disclaimer {
+	width: 22em;
+	float: left;
+	font-size: 0.7em;
+	}
+#theform #pt4 input {
+	height: 5em;
+	font-size: 1em;
+	width: 18em;
+	background: #f3f3f3;
+	font-weight: bold;
+	border-bottom: 	1px solid #999999;
+	border-right: 1px solid #999999;
+	border-top: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	float: right;
+	}
+
+#copyright {
+	clear: both;
+	padding: 0.5em;
+	font-size: 0.8em;
+	font-style: italic;
+	}

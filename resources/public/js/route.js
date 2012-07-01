@@ -1,5 +1,5 @@
 $(function() {
-    $("#waypoints").on("click", ".waypoint-delete", function(){
+    $("#waypoints").on("click", ".delete", function(){
       $(this).closest("li").remove();
       return false;
     });
