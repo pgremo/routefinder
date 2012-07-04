@@ -2,4 +2,4 @@
 
 (defn version
   []
-  (-> version (. (getClass)) (. (getPackage)) (. (getImplementationVersion))))
+  (-> ^Object version (. (getClass)) (. (getPackage)) (. (getImplementationVersion))))
