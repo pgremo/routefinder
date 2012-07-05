@@ -2,6 +2,7 @@
   (:require [routefinder.models.solarsystem :as solarsystem]
             [routefinder.models.gates :as gates]
             [routefinder.models.types :as types]
+            [routefinder.models.characters :as characters]
             [clojure.set :as set]
             [clojure.string :as string])
   (:use net.cgrand.enlive-html
@@ -26,7 +27,7 @@
                                                       (if (contains? jump-freighters ship) (assoc (types/by-id (:requiredSkill1 ship)) :agilityBonus (:freighterBonusA1 ship)))))
         {:keys [agility mass]} ship]
 
-    (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join skills agility-bonus))))))
+    (* 1e-6 (- (ln 0.25)) agility mass (reduce * (map agility-skill-value (set/join skills agility-bonus {:typeid :typeid}))))))
 
 (defn find-route
   [nodes ship skills]
@@ -58,8 +59,8 @@
                                      [[:td (nth-child 3)]] (content (String/valueOf segment))
                                      [[:td (nth-child 4)]] (content (String/valueOf cost)))))
 
-(defpage [:post "/route"] {:keys [waypoint ship]}
-  (let [skills #{{:typeid 3453 :level 5} {:typeid 3327 :level 5} {:typeid 20342 :level 4}}]
+(defpage [:post "/route"] {:keys [waypoint ship character keyID vCode]}
+  (let [skills (characters/skills character keyID vCode)]
     (layout (header) (result (find-route (map #(Long/valueOf %) waypoint) (types/by-id ship) skills)))))
 
 (defpage [:get "/route"] []

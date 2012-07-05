@@ -22,7 +22,29 @@ $(function() {
       minLength: 2,
       select: function(event, ui) {
         $("input[name=ship]").val(ui.item.id);
-        $("#ship-selected").val(ui.item.label)
+        $("input[name=ship-name]").val(ui.item.label);
+      }
+    });
+
+    $("#character-search").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "/character/search.json",
+          data: {
+            "term": request.term,
+            "apiKeys[]": $.jStorage.get("apiKeys", []).map(function(x){return x.id + ":" + x.code})
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ui) {
+        $("input[name=character-name]").val(ui.item.label);
+        $("input[name=character]").val(ui.item.id);
+        $("input[name=keyID]").val(ui.item.keyID);
+        $("input[name=vCode]").val(ui.item.vCode);
       }
     });
 

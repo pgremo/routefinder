@@ -1,5 +1,5 @@
 (ns routefinder.core
-  (:use clojure.string)
+  (:use [clojure.string :only [split]])
   (:import java.math.RoundingMode))
 
 (defn shuffle-sub

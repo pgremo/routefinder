@@ -29,13 +29,17 @@
     </div>
   </fieldset>
   <fieldset id="pt3">
-    <legend><span>Step </span>3. <span>: Skills</span></legend>
-    <h3>Select the level of skills</h3>
-    <div class="help">The following skills may have an effect on the generated route.</div>
-    <label for="3327">Spaceship Command</label>
-    <input type="text" id="3327" tabindex="4" value="5"/>
-    <label for="3453">Evasive Maneuvering</label>
-    <input type="text" id="3453" tabindex="5" value="5"/>
+    <legend><span>Step </span>3. <span>: Select Character</span></legend>
+    <h3>Choose the character to make the trip</h3>
+    <div class="help">The skills of the character can make a difference in route selection.</div>
+    <label for="character-search">Character Name</label>
+    <input type="text" id="character-search" tabindex="4"/>
+    <div>
+      <label for="character-selected">Selected Character</label><input type="text" name="character-name" id="character-selected" readonly="readonly">
+      <input type="hidden" name="character"/>
+      <input type="hidden" name="keyID"/>
+      <input type="hidden" name="vCode"/>
+    </div>
   </fieldset>
   <fieldset id="pt4">
     <legend>Step 4  : Submit form</legend>
